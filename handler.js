@@ -27,7 +27,7 @@ app.post("/tasks", function (request, response) {
 
 app.put("/tasks/:taskId", function (request, response) {
   const completed = request.params.taskId;
-  response.status(202).send(`Successfully updated ${completed}`)
+  response.status(202).send(`You have completed task ${completed}`)
 });
 
 module.exports.tasks = serverlessHttp(app);
