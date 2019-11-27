@@ -29,7 +29,14 @@ app.get("/tasks", function (request, response) {
 app.delete("/tasks/:taskId", function (request, response) {
   // Delete the task with the given ID from the database
   const taskId = request.params.taskId;
-  response.status(200).send(`Successfully deleted task ${taskId}`);
+  // escape user provided values
+  connection.query("DELETE from Task WHERE taskId = ?"[taskId], function (err) {
+    if (err) {
+      response.status(500).json({ error: err });
+    } else {
+      response.status(200);
+    }
+  })
 });
 
 app.post("/tasks", function (request, response) {
