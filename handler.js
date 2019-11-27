@@ -2,6 +2,14 @@ const express = require("express");
 const serverlessHttp = require("serverless-http");
 const cors = require("cors");
 const bodyParser = require("body-parser")
+const mysql = require("mysql");
+
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: 'todos'
+});
 
 const app = express();
 app.use(cors());
@@ -9,7 +17,13 @@ app.use(bodyParser.json());
 
 app.get("/tasks", function (request, response) {
   // Get all the tasks from the database.
-  response.status(200).send("You requested all the tasks!");
+  connection.query("SELECT * from Task", function (err, data) {
+    if (err) {
+      response.status(500).json({ error: err });
+    } else {
+      response.status(200).json(data);
+    }
+  });
 });
 
 app.delete("/tasks/:taskId", function (request, response) {
@@ -27,7 +41,8 @@ app.post("/tasks", function (request, response) {
 
 app.put("/tasks/:taskId", function (request, response) {
   const completed = request.params.taskId;
-  response.status(202).send(`You have completed task ${completed}`)
+  const task = request.body;
+  response.status(202).send(`You have completed task ${completed} with ${task.text}`)
 });
 
 module.exports.tasks = serverlessHttp(app);
