@@ -46,7 +46,7 @@ app.post("/tasks", function (request, response) {
     if (err) {
       response.status(404).json({ error: err });
     } else {
-      response.status(201).send(`Task added ${task.text}`)
+      response.status(201).json(task.text);
     }
   })
 });
