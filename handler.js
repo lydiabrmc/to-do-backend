@@ -15,7 +15,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get("/tasks", function (request, response) {
+app.get("/tasks", function (response) {
   // Get all the tasks from the database.
   connection.query("SELECT * from Task", function (err, data) {
     if (err) {
@@ -30,26 +30,39 @@ app.delete("/tasks/:taskId", function (request, response) {
   // Delete the task with the given ID from the database
   const taskId = request.params.taskId;
   // escape user provided values
-  connection.query("DELETE from Task WHERE taskId = ?"[taskId], function (err) {
+  connection.query("DELETE from Task WHERE taskId = ?", [taskId], function (err) {
     if (err) {
       response.status(500).json({ error: err });
     } else {
-      response.status(200);
+      response.sendStatus(200);
     }
   })
 });
 
 app.post("/tasks", function (request, response) {
-  //Create the new task in the database
+  //Create new task in the database
   const task = request.body;
-  //{text: "hoover the car", completed: true, date: "2019-10-09"}
-  response.status(201).send(`Successfully added ${task.text}`);
+  connection.query("INSERT INTO Task (text, completed, dateCreated, dateDue, taskId) VALUES (?)", task, function (err) {
+    if (err) {
+      response.status(404).json({ error: err });
+    } else {
+      response.status(201).send(`Task added ${task.text}`)
+    }
+  })
 });
 
 app.put("/tasks/:taskId", function (request, response) {
-  const completed = request.params.taskId;
+  const taskId = request.params.taskId;
   const task = request.body;
-  response.status(202).send(`You have completed task ${completed} with ${task.text}`)
+  // complete tasks and update the status to complete
+  const q = "UPDATE Task SET text = ?, completed = ?, dateCreated = ?, dateDue = ? WHERE taskId = ?";
+  connection.query(q, [task.text, task.completed, task.dateCreated, task.dateDue, taskId], function (err) {
+    if (err) {
+      response.status(500).json({ error: err });
+    } else {
+      response.sendStatus(205)
+    }
+  });
 });
 
 module.exports.tasks = serverlessHttp(app);
