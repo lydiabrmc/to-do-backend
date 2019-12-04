@@ -42,11 +42,14 @@ app.delete("/tasks/:taskId", function (request, response) {
 app.post("/tasks", function (request, response) {
   //Create new task in the database
   const task = request.body;
-  connection.query("INSERT INTO Task (text, completed, dateCreated, dateDue, taskId) VALUES (?)", task, function (err) {
+  task.completed = false;
+  const q = "INSERT INTO Task SET ?";
+  connection.query(q, task, function (err, data) {
     if (err) {
       response.status(404).json({ error: err });
     } else {
-      response.status(201).json(task.text);
+      task.taskId = data.insertId;
+      response.status(201).json(task);
     }
   })
 });
