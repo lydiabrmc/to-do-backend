@@ -1,6 +1,9 @@
-"taskId","taskText","completed","date","id"
-6,"Walk the dog ",0,"2020-01-15",1
-7,"Shopping",0,"2020-03-16",2
-2,"Walking",1,"2020-01-01",4
-1,"Hike",1,"2020-01-03",5
-4,"Running",0,"2020-04-05",3
+"taskId","taskText","completed","dateDue","id","dateCreated"
+6,"Jogging",1,"2020-01-05",1,"2020-01-09"
+1,"Hoover the house",1,"2020-02-01",5,"2020-01-09"
+5,"Hiking ",0,"2020-01-09",3,"2020-01-09"
+7,"Walking the cat ",0,"2020-01-22",4,"2020-01-09"
+8,"Wash the dishes",0,"2020-01-27",1,"2020-01-09"
+31,"Change tank water",0,"2020-01-30",2,"2020-01-09"
+0,"Feed the fish",0,"2020-03-17",3,"2020-01-09"
+9,"Call the doctors",0,"2020-03-18",4,"2020-01-09"

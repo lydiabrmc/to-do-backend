@@ -54,10 +54,9 @@ app.post("/tasks", function (request, response) {
 
 app.put("/tasks/:taskId", function (request, response) {
   const taskId = request.params.taskId;
-  const task = request.body;
   // complete tasks and update the status to complete
-  const q = "UPDATE Task SET taskText = ?, completed = ?, dateCreated = ?, dateDue = ? WHERE taskId = ?";
-  connection.query(q, [task.taskText, task.completed, task.dateCreated, task.date, taskId], function (err) {
+  const q = "UPDATE Task SET completed = ? WHERE taskId = ?";
+  connection.query(q, [1, taskId], function (err) {
     if (err) {
       response.status(500).json({ error: err });
     } else {
