@@ -15,7 +15,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get("/tasks", function (response) {
+app.get("/tasks", function (request, response) {
   // Get all the tasks from the database.
   connection.query("SELECT * from Task", function (err, data) {
     if (err) {
@@ -27,9 +27,7 @@ app.get("/tasks", function (response) {
 });
 
 app.delete("/tasks/:taskId", function (request, response) {
-  // Delete the task with the given ID from the database
   const taskId = request.params.taskId;
-  // escape user provided values
   connection.query("DELETE from Task WHERE taskId = ?", [taskId], function (err) {
     if (err) {
       response.status(500).json({ error: err });
@@ -58,8 +56,8 @@ app.put("/tasks/:taskId", function (request, response) {
   const taskId = request.params.taskId;
   const task = request.body;
   // complete tasks and update the status to complete
-  const q = "UPDATE Task SET text = ?, completed = ?, dateCreated = ?, dateDue = ? WHERE taskId = ?";
-  connection.query(q, [task.text, task.completed, task.dateCreated, task.dateDue, taskId], function (err) {
+  const q = "UPDATE Task SET taskText = ?, completed = ?, dateCreated = ?, dateDue = ? WHERE taskId = ?";
+  connection.query(q, [task.taskText, task.completed, task.dateCreated, task.date, taskId], function (err) {
     if (err) {
       response.status(500).json({ error: err });
     } else {
